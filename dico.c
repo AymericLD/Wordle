@@ -6,11 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+int length=835;
+
+
 void lecture(char* filename,char** L)
 {
 
 	FILE* f=fopen(filename,"rb");
-	int length=239185;
 	if (f==NULL)
 	{
 		printf("Impossible d'ouvrir le fichier");
@@ -28,11 +30,9 @@ void lecture(char* filename,char** L)
 
 }
 
-char* mot_aleatoire(int l,char* filename)
+char* mot_aleatoire(int l,char* filename,char** L)
 {
-	int length=239185;
 	char* liste_mots[length];
-	char** L=malloc((length+1)*sizeof(char*));
 	if (L==NULL)
 	{
 		printf("L'allocation a échoué");
@@ -51,20 +51,22 @@ char* mot_aleatoire(int l,char* filename)
 	srand(time(NULL));
 	int r = rand()%j;
 	char* mot = liste_mots[r];
-	free(L);
 	return mot;
 
 }
 
 
-
+/*
 int main ()
 {
 	int longueur;
+	char** L=malloc(835*sizeof(char*));
 	printf("Rentrez une longueur de mot :\n");
 	scanf("%d",&longueur);
-	char* mot = mot_aleatoire(longueur,"french.txt");
+	char* mot = mot_aleatoire(longueur,"liste_francais.txt",L);
 	printf("le mot est : %s\n", mot);
-    return 0;
-	
+	return 0;	
 }
+*/
+
+
