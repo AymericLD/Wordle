@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "dico.h"
+#include "verify.h"
+
 
 
 // Mémoire sur les lettres recontrées : structure de file
@@ -101,9 +104,20 @@ int main()
       perfect_word[i]='O';
     }
 
+    /* On utilise deux dictionnaires : le premier de 835 mots courants contient les mots à trouver, le deuxième de 239185 mots permet la vérification 
+    de la validité du mot saisi par le joueur.
+    */
+
+   int size=27740; 
+   char** dico=malloc(27740*sizeof(char*));
+   lecture("liste_francais.txt",dico);
+   char** L=malloc((length+1)*sizeof(char*));
+
+
     // Algorithme d'évaluation du mot
 
     char* resultat=malloc(longueur*sizeof(int));
+
 
     for(int i=0;i<nb_tentatives;i++)
     {
@@ -118,17 +132,21 @@ int main()
          scanf("%s",mot_joueur);
        }
 
-       while(!dichotomie(mot_joueur))
+       // Vérifcation que le mot saisi est bien dans le dictionnaire
+
+       while(!dichotomie(dico,size,0,mot_joueur))
        {
          printf("Le mot que tu as entré n'est pas dans le dictionnaire, saisis un autre mot.\n");
          printf("Entrez un mot de %d lettres\n",longueur);
          scanf("%s",mot_joueur);
        }
 
+
        // Choix aléatoire du mot dans le dictionnaire
 
-       char* mot_cherche = mot_aleatoire(longueur,"french.txt");
+       char* mot_cherche=mot_aleatoire(longueur,"dico.txt",L);
 
+       
        // Parcours du mot donné donné par l'utilisateur
 
        for(int j=0;j<longueur;j++) 
@@ -191,6 +209,8 @@ int main()
   }
   printf("Game Over, retente ta chance !");
   free(resultat);
+  free(dico);
+  free(L);
   return 0;
 
 }
@@ -199,9 +219,7 @@ int main()
 /* A ajouter :
 
 -Affichage graphique plus joli
--Fonction de vérification que le mot est bien dans le dictionnaire
 -Gérer les accents
--Créer des fichiers .h pour pouvoir include
 
 */
 
