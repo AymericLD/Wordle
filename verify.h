@@ -1,6 +1,6 @@
-#ifndef __VERIFY.H__
-#define __VERIFY.H__
+#ifndef __VERIFY_H__
+#define __VERIFY_H__
 
-bool  dichotomie(char** file,unsigned int size,int debut,int fin_1,char* word);
+bool  dichotomie(char** file,int size,int debut,char* word);
 
 #endif
