@@ -9,31 +9,32 @@ Pour ce faire, on va effectuer une recherche dichotomique du mot dans le diction
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include "dico.h"
+
 
 /* Fonction effectuant la recherche dichotomique */
 
-bool dichotomie(char** file,unsigned int size,int debut,int fin_1,char* word)
+
+
+bool dichotomie(char** file,int size,int debut,char* word)
 {
-   if (fin_1>=debut)
+   if ((size-1)>=debut)
    {
-      int m=floor(fin_1+debut/2);
+      int m=floor((size-1+debut)/2);
       if (strcmp(file[m],word)==0)
       {
-         printf("Mot trouvé !");
-         return true;   
+         return true;  
       }
       if(strcmp(file[m],word)>0)
       {
-         fin_1=m-1;
+         size=m;
       }
       if (strcmp(file[m],word)<0)
       {
          debut=m+1;
       }
-      return (dichotomie(file,size,debut,fin_1,word));  
+      return (dichotomie(file,size,debut,word));  
    }
-   printf("Mot non trouvé");
    return false;
 }
-
 
