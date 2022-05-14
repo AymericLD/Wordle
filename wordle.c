@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
 
 #include "dico.h"
 #include "verify.h"
@@ -77,6 +79,31 @@ int occurence(char letter,char* word,int longueur)
 }
 
 
+bool find_word_dicho (char **words, char *word, int left, int right)
+{
+  int mid ;
+  int cmp ;
+
+#ifdef DEBUG
+  printf ("Search between %d %d\n", left, right) ;
+#endif
+  if (left > right) return (false) ;
+  mid = (left + right) / 2 ;
+
+  /* Is word > words[mid] ? */
+  cmp = strcmp (word, words[mid]) ;
+#ifdef DEBUG
+  printf ("Index: %d %s ? %s Cmp: %d\n", mid, word, words[mid], cmp) ;
+#endif
+  if (cmp == 0) return (true) ;     /* word == words[mid] */
+
+  /* word < words[mid] ? */
+  if (cmp < 0) return (find_word_dicho (words, word, left, mid - 1)) ;
+
+  /* Obviously word > words[mid]. */
+  return (find_word_dicho (words, word, mid + 1, right)) ;
+}
+
 
 int main()
 {
@@ -104,14 +131,25 @@ int main()
       perfect_word[i]='O';
     }
 
-    /* On utilise deux dictionnaires : le premier de 835 mots courants contient les mots à trouver, le deuxième de 239185 mots permet la vérification 
-    de la validité du mot saisi par le joueur.
-    */
+    /* On utilise deux dictionnaires : le premier de 835 mots courants contient les mots à trouver, le deuxième de 386264 mots permet la vérification 
+      de la validité du mot saisi par le joueur.*/
 
-   int size=27740; 
-   char** dico=malloc(27740*sizeof(char*));
-   lecture("liste_francais.txt",dico);
-   char** L=malloc((length+1)*sizeof(char*));
+    int size=386264; 
+    char** dico=malloc(size*sizeof(char*));
+    if (dico==NULL)
+    {
+      printf("Erreur d'allocation");
+      return -1;
+    }
+    lecture("meilleur.txt",dico,size);
+
+    int length=835;
+    char** L=malloc((length+1)*sizeof(char*));
+    if (L==NULL)
+    {
+      printf("Erreur d'allocation");
+      return -1;
+    }
 
 
     // Algorithme d'évaluation du mot
@@ -141,10 +179,9 @@ int main()
          scanf("%s",mot_joueur);
        }
 
-
        // Choix aléatoire du mot dans le dictionnaire
 
-       char* mot_cherche=mot_aleatoire(longueur,"dico.txt",L);
+       char* mot_cherche=mot_aleatoire(longueur,"dico.txt",L,length);
 
        
        // Parcours du mot donné donné par l'utilisateur
@@ -216,12 +253,6 @@ int main()
 }
 
 
-/* A ajouter :
-
--Affichage graphique plus joli
--Gérer les accents
-
-*/
 
 
 
