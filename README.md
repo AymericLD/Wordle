@@ -8,4 +8,14 @@ Les fichiers dico.c et verify.c contiennent les fonctions permettant respectivem
 
 Les deux dictionnaires utilisés sont fournis.
 
-Instructions de compilation : gcc -Wall -Wfatal-errors -Werror -o wordle.out wordle.c dico.c verify.c
+Instructions de compilation : 
+
+-Compilation du jeu Wordle : 
+
+gcc -Wall -Wfatal-errors -Werror -o wordle.out wordle.c dico.c verify.c
+
+-Compilation de l'IA du jeu Wordle : 
+
+gcc -Wall -Wfatal-errors -Werror -o IA.out IA.c dico.c -lm
+
+
