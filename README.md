@@ -6,7 +6,7 @@ Le programme principal, contenant l'algorithme du jeu est wordle.c.
 
 Les fichiers dico.c et verify.c contiennent les fonctions permettant respectivement de lire et de choisir un mot aléatoire dans un dictionnaire ; et de vérifier si le mot saisi par le joueur se trouve bien dans le dictionnaire.
 
-Les deux dictionnaires utilisés sont fournis.
+Les deux dictionnaires utilisés sont fournis : meilleur.txt est le dictionnaire de 286364 mots utilisé 
 
 Instructions de compilation : 
 
