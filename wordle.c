@@ -79,37 +79,13 @@ int occurence(char letter,char* word,int longueur)
 }
 
 
-bool find_word_dicho (char **words, char *word, int left, int right)
-{
-  int mid ;
-  int cmp ;
-
-#ifdef DEBUG
-  printf ("Search between %d %d\n", left, right) ;
-#endif
-  if (left > right) return (false) ;
-  mid = (left + right) / 2 ;
-
-  /* Is word > words[mid] ? */
-  cmp = strcmp (word, words[mid]) ;
-#ifdef DEBUG
-  printf ("Index: %d %s ? %s Cmp: %d\n", mid, word, words[mid], cmp) ;
-#endif
-  if (cmp == 0) return (true) ;     /* word == words[mid] */
-
-  /* word < words[mid] ? */
-  if (cmp < 0) return (find_word_dicho (words, word, left, mid - 1)) ;
-
-  /* Obviously word > words[mid]. */
-  return (find_word_dicho (words, word, mid + 1, right)) ;
-}
 
 
 int main()
 {
     // Mot d'accueil 
 
-    printf("Bienvenue dans Wordle !\nLa légende du jeu est la suivante : une lettre bien placée sera signalée par 'O', une lettre mal placée par '~',\nune lettre qui n'est pas dans le mot sera signalée par 'X'.");
+    printf("Bienvenue dans Wordle !\nLa légende du jeu est la suivante : une lettre bien placée sera signalée par 'O', une lettre mal placée par '~',une lettre qui n'est pas dans le mot sera signalée par 'X'. Notez également que les réglages sont tels que si le mot entré contient plusieurs fois une même lettre, et que cette lettre apparaît moins de fois dans le mot à trouver, les occurences supplémentaires seront directement considérées comme incorrectes.\n");
 
     // Définition de la longueur du mot à deviner
 
@@ -156,6 +132,10 @@ int main()
 
     char* resultat=malloc(longueur*sizeof(int));
 
+     // Choix aléatoire du mot dans le dictionnaire
+
+    char* mot_cherche=mot_aleatoire(longueur,"dico.txt",L,length);
+
 
     for(int i=0;i<nb_tentatives;i++)
     {
@@ -165,7 +145,7 @@ int main()
 
        while (strlen(mot_joueur)!=longueur)
        {
-         printf("La longueur du mot entré n'est pas correcte\n");
+         printf("La longueur du mot entré n'est pas correcte.\n");
          printf("Entrez un mot de %d lettres\n",longueur);
          scanf("%s",mot_joueur);
        }
@@ -178,12 +158,7 @@ int main()
          printf("Entrez un mot de %d lettres\n",longueur);
          scanf("%s",mot_joueur);
        }
-
-       // Choix aléatoire du mot dans le dictionnaire
-
-       char* mot_cherche=mot_aleatoire(longueur,"dico.txt",L,length);
-
-       
+ 
        // Parcours du mot donné donné par l'utilisateur
 
        for(int j=0;j<longueur;j++) 
@@ -209,31 +184,32 @@ int main()
               } 
           }
           if(k!=0)
-          {
-             if(search(Memoire->data,j,Memoire->cur_nb)) // On regarde si l'indice de la lettre considérée a été gardée en mémoire
-             {
-               resultat[j]='O';
-               k=0;
-             }
-             else
-             {
-               /* Si la lettre considérée n'est pas bien placée et apparaît plus de fois dans le mot saisi par le joueur que dans le mot cherché, 
-               alors nécessairement cette lettre n'est pas dans le mot */
-
-               if(occurence(mot_joueur[j],mot_joueur,longueur)>occurence(mot_joueur[j],mot_cherche,longueur))
+          {             
+               if(search(Memoire->data,j,Memoire->cur_nb)) // On regarde si l'indice de la lettre considérée a été gardée en mémoire
                {
-                 resultat[j]='X';
+                  resultat[j]='O';
                }
                else
                {
-                 resultat[j]='~';
-               }
-             } 
-          }
-          else
-          {
-            resultat[j]='X';
-          }  
+                 if(occurence(mot_joueur[j],mot_joueur,longueur)==occurence(mot_joueur[j],mot_cherche,longueur))
+                 {
+                    resultat[j]='~';
+                 }
+                 if(occurence(mot_joueur[j],mot_joueur,longueur)>occurence(mot_joueur[j],mot_cherche,longueur))
+                 {
+                    mot_joueur[j]='0';
+                    resultat[j]='X';
+                 }
+                 if(occurence(mot_joueur[j],mot_joueur,longueur)<occurence(mot_joueur[j],mot_cherche,longueur))
+                 {
+                    resultat[j]='~';
+                 }
+               }       
+           }
+           else
+           {
+             resultat[j]='X';
+           }  
         free(Memoire);
         free(memoire);              
         }
@@ -244,7 +220,8 @@ int main()
       return 0;
     }
   }
-  printf("Game Over, retente ta chance !");
+  printf("Game Over, retente ta chance !\n");
+  printf("Le mot était %s\n", mot_cherche);
   free(resultat);
   free(dico);
   free(L);
