@@ -18,4 +18,6 @@ gcc -Wall -Wfatal-errors -Werror -o wordle.out wordle.c dico.c verify.c
 
 gcc -Wall -Wfatal-errors -Werror -o IA.out IA.c dico.c -lm
 
+Malheureusement, nous ne sommes pas parvenus à corriger l'erreur de segmentation qui apparaît à l'éxécution du programme. Nous y travaillons toujours.
+
 
